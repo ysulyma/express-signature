@@ -1,6 +1,6 @@
 module.exports = signature
 
-function signature(sig, options)
+function signature(sig, options = {})
   options.failure ||= (req, res, next) ->
     next status: 401
   

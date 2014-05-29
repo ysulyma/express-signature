@@ -3,6 +3,7 @@
   var toString$ = {}.toString;
   module.exports = signature;
   function signature(sig, options){
+    options == null && (options = {});
     options.failure || (options.failure = function(req, res, next){
       return next({
         status: 401

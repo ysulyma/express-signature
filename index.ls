@@ -35,8 +35,19 @@ function validate(cond, o, key)
     | <[ bool boolean ]>
       o[key] = (val && val != \false) || false
     | \string
+      return false unless val
       o[key] .= to-string!
   true
       
 signature.validate = validate
+
+/* other built-ins */
 signature.email = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
+
+signature.enum = ->
+  arr = if Array.is-array &0 then &0 else Array::slice.call &
+  arr `contains` _
+  
+/* utility functions */
+function contains(arr, val)
+  -1 != arr.index-of val

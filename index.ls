@@ -2,7 +2,7 @@ module.exports = signature
 
 function signature(sig, options = {})
   options.failure ||= (req, res, next) ->
-    next status: 401
+    next status: 400
   
   (req, res, next) ->
     if validate sig, req

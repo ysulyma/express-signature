@@ -1,29 +1,42 @@
-function signature(sig)
-  (req, res, next) ->
-    if validate-object sig <| req
-      next!
-    else
-      next status: 401
-    
 module.exports = signature
 
-/* built-in validations */
-function validate-object(sig)
-  (o) ->
-    for key of sig
-      switch typeof! sig[key]
-      | \Object
-        return false unless validate-object sig[key] <| o[key]
-      | \String
-        return false unless o[key]
-        
-        o[key] = switch sig[key]
-        | <[ double float ]> => parse-float o[key]
-        | <[ int integer ]> => parse-int o[key]
-        | _ => o[key]
-      | \RegExp
-        return false unless o[key] && o[key].match sig[key]
-      | \Function
-        return false unless sig[key] o[key]
-    true
-    
+function signature(sig, options)
+  options.failure ||= (req, res, next) ->
+    next status: 401
+  
+  (req, res, next) ->
+    if validate sig, req
+      next!
+    else
+      options.failure req, res, next
+
+function validate(cond, o, key)
+  val = if key then o[key] else o
+  switch typeof! cond
+  | \Object
+    for $key of cond
+      return false unless validate cond[$key], val, $key
+  | \Array
+    for $cond in cond
+      return false unless validate $cond, o, key
+  | \RegExp
+    return false unless val && val.match cond
+  | \Function
+    return false unless cond val, o, key
+  | \String
+    /* built-in types */
+    switch cond
+    | <[ double float ]>
+      return false unless val
+      o[key] = parse-float val
+    | <[ int integer ]>
+      return false unless val
+      o[key] = parse-int val
+    | <[ bool boolean ]>
+      o[key] = (val && val != \false) || false
+    | \string
+      o[key] .= to-string!
+  true
+      
+signature.validate = validate
+signature.email = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/

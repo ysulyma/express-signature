@@ -1,6 +1,6 @@
 {
   "name": "express-signature",
-  "version": "0.5",
+  "version": "1.0.0",
   "description": "Method type signatures for Express routes",
   "author": "Yuri Sulyma <yuri.sulyma@gmail.com>",
   "bugs": "https://github.com/yuri0/express-signature/issues",
@@ -13,6 +13,5 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/yuri0/express-signature.git"
-  },
-  "dependencies": {}
+  }
 }

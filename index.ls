@@ -34,6 +34,10 @@ function validate(cond, o, key)
       o[key] = parse-int val
     | <[ bool boolean ]>
       o[key] = (val && val != \false) || false
+    | \object
+      return false unless \Object == typeof! val
+    | \array
+      return false unless Array.is-array val
     | \string
       return false unless val
       o[key] .= to-string!

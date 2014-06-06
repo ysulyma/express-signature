@@ -67,6 +67,16 @@
       case 'boolean':
         o[key] = (val && val !== 'false') || false;
         break;
+      case 'object':
+        if ('Object' !== toString$.call(val).slice(8, -1)) {
+          return false;
+        }
+        break;
+      case 'array':
+        if (!Array.isArray(val)) {
+          return false;
+        }
+        break;
       case 'string':
         if (!val) {
           return false;
